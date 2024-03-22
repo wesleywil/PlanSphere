@@ -1,4 +1,5 @@
 import { StatusBar } from "expo-status-bar";
+import { useCallback, useEffect, useState } from "react";
 import {
   StyleSheet,
   Text,
@@ -6,33 +7,40 @@ import {
   ScrollView,
   TouchableHighlight,
 } from "react-native";
+import {
+  createTable,
+  getDBConnection,
+  getPlans,
+} from "../../database/db-service";
+import { Plans } from "../../utils/models";
 
 const PlansList = () => {
+  const [plans, setPlans] = useState<Plans[]>([]);
+  const loadPlans = useCallback(async () => {
+    try {
+      const db = await getDBConnection();
+      await createTable(db);
+      const storedPlans = await getPlans(db);
+      setPlans(storedPlans);
+    } catch (error) {
+      console.error(error);
+    }
+  }, []);
+
+  useEffect(() => {
+    loadPlans();
+  }, [loadPlans]);
   return (
     <View style={styles.container}>
       <ScrollView
         style={styles.plansContainer}
         contentContainerStyle={styles.planContentContainer}
       >
-        <Text style={styles.planItem}>Organize Books</Text>
-        <Text style={styles.planItem}>Organize Books</Text>
-        <Text style={styles.planItem}>Organize Books</Text>
-        <Text style={styles.planItem}>Organize Books</Text>
-        <Text style={styles.planItem}>Organize Books</Text>
-        <Text style={styles.planItem}>Organize Books</Text>
-        <Text style={styles.planItem}>Organize Books</Text>
-        <Text style={styles.planItem}>Organize Books</Text>
-        <Text style={styles.planItem}>Organize Books</Text>
-        <Text style={styles.planItem}>Organize Books</Text>
-        <Text style={styles.planItem}>Organize Books</Text>
-        <Text style={styles.planItem}>Organize Books</Text>
-        <Text style={styles.planItem}>Organize Books</Text>
-        <Text style={styles.planItem}>Organize Books</Text>
-        <Text style={styles.planItem}>Organize Books</Text>
-        <Text style={styles.planItem}>Organize Books</Text>
-        <Text style={styles.planItem}>Organize Books</Text>
-        <Text style={styles.planItem}>Organize Books</Text>
-        <Text style={styles.planItem}>Organize Books</Text>
+        {plans.length ? (
+          plans.map((plan) => <Text style={styles.planItem}>{plan.title}</Text>)
+        ) : (
+          <Text>NO PLANS YET</Text>
+        )}
       </ScrollView>
       <View style={styles.optionContainer}>
         <TouchableHighlight onPress={() => console.log("Nothing to do")}>
