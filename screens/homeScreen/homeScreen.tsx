@@ -19,6 +19,12 @@ const HomeScreen = ({ navigation }: any) => {
       >
         <Text style={styles.navButtonText}>Go to Plans List</Text>
       </TouchableHighlight>
+      <TouchableHighlight
+        style={styles.navTouch}
+        onPress={() => navigation.navigate("Add Plan")}
+      >
+        <Text style={styles.navButtonText}>Add Plan</Text>
+      </TouchableHighlight>
     </View>
   );
 };
