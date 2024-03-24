@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Button, TextInput, View, StyleSheet } from "react-native";
-import { getDBConnection, savePlan } from "../database/db-service";
-import { Plans } from "../utils/models";
+import { createPlan } from "../database/db-functions";
+import { Plan } from "../utils/models";
 
 const stringToDate = (dateString: string | null): Date | undefined => {
   if (typeof dateString === "string") {
@@ -12,8 +12,8 @@ const stringToDate = (dateString: string | null): Date | undefined => {
   return undefined;
 };
 
-const AddPlan = () => {
-  const [plan, setPlan] = useState<Plans>({} as Plans);
+const AddPlan = ({ navigation }: any) => {
+  const [plan, setPlan] = useState<Plan>({} as Plan);
 
   const handleTitleChange = (text: string) => {
     setPlan({ ...plan, title: text });
@@ -35,11 +35,9 @@ const AddPlan = () => {
   const handleAddPlan = async () => {
     try {
       console.log("1");
-      const db = await getDBConnection();
-      console.log(db);
-      //   const result = await savePlan(db, plan);
-      //   console.log("Result=> ", result);
-      //   console.log("PLANS: ", plan);
+      const result = await createPlan(plan);
+      console.log("Create Plan Result => ", result);
+      navigation.navigate("Plans List");
     } catch (error) {
       console.error("Error while trying to add a new plan: ", error);
     }

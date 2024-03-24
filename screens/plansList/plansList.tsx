@@ -7,21 +7,17 @@ import {
   ScrollView,
   TouchableHighlight,
 } from "react-native";
-import {
-  createTable,
-  getDBConnection,
-  getPlans,
-} from "../../database/db-service";
-import { Plans } from "../../utils/models";
+import { getPlans } from "../../database/db-functions";
 
-const PlansList = () => {
-  const [plans, setPlans] = useState<Plans[]>([]);
+import { Plan } from "../../utils/models";
+
+const PlansList = ({ navigation }: any) => {
+  const [plans, setPlans] = useState<Plan[]>([]);
   const loadPlans = useCallback(async () => {
     try {
-      const db = await getDBConnection();
-      await createTable(db);
-      const storedPlans = await getPlans(db);
-      setPlans(storedPlans);
+      const storedPlans: any = await getPlans();
+      console.log("Stored Plans ==> ", storedPlans);
+      setPlans(storedPlans._array);
     } catch (error) {
       console.error(error);
     }
@@ -37,13 +33,17 @@ const PlansList = () => {
         contentContainerStyle={styles.planContentContainer}
       >
         {plans.length ? (
-          plans.map((plan) => <Text style={styles.planItem}>{plan.title}</Text>)
+          plans.map((plan) => (
+            <Text key={plan.id} style={styles.planItem}>
+              {plan.title}
+            </Text>
+          ))
         ) : (
-          <Text>NO PLANS YET</Text>
+          <Text style={styles.plansEmpty}>NO PLANS YET</Text>
         )}
       </ScrollView>
       <View style={styles.optionContainer}>
-        <TouchableHighlight onPress={() => console.log("Nothing to do")}>
+        <TouchableHighlight onPress={() => navigation.navigate("Add Plan")}>
           <Text style={styles.addButtonText}>+</Text>
         </TouchableHighlight>
       </View>
@@ -70,24 +70,29 @@ const styles = StyleSheet.create({
   },
   plansContainer: {
     width: "100%",
-    maxHeight: "80%",
+    minHeight: 450,
     marginTop: 20,
   },
   planContentContainer: {
     padding: 5,
     alignItems: "center",
     justifyContent: "flex-start",
-    gap: 2,
+    gap: 5,
   },
   planItem: {
-    width: "90%",
+    width: "95%",
     padding: 10,
     color: "#f9f7f9",
+    backgroundColor: "#1dbae3",
     textAlign: "center",
-    fontSize: 25,
-    borderWidth: 2,
-    borderColor: "#1dbae3",
+    fontSize: 28,
+    fontWeight: "bold",
     borderRadius: 10,
+  },
+  plansEmpty: {
+    color: "#f9f7f9",
+    fontSize: 35,
+    fontWeight: "bold",
   },
   optionContainer: {
     width: "100%",
@@ -100,9 +105,8 @@ const styles = StyleSheet.create({
     borderTopWidth: 2,
     borderColor: "#1dbae3",
   },
-  addButton: {
-    width: 45,
-    height: 45,
+  addButtonTouchable: {
+    borderRadius: 10,
   },
   addButtonText: {
     minWidth: 45,
