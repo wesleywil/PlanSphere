@@ -1,23 +1,27 @@
 import * as SQLite from "expo-sqlite";
 
-
 export const DatabaseConnection = {
-  getConnection:()=> SQLite.openDatabase("database.db")
-}
+  getConnection: () => SQLite.openDatabase("database.db"),
+};
 
-var db:any = null;
+var db: any = null;
 
-
-export default class DatabaseInit{
-  constructor(){
-    db = DatabaseConnection.getConnection()
-    db.exec([{
-      sql:'PRAGMA foreign_keys = ON;', args:[]
-    }], false, ()=>
-    console.log('Foreign keys turned on'));
-    this.InitDb()
+export default class DatabaseInit {
+  constructor() {
+    db = DatabaseConnection.getConnection();
+    db.exec(
+      [
+        {
+          sql: "PRAGMA foreign_keys = ON;",
+          args: [],
+        },
+      ],
+      false,
+      () => console.log("Foreign keys turned on")
+    );
+    this.InitDb();
   }
-  private InitDb(){
+  private InitDb() {
     var sql = [
       `DROP TABLE IF EXISTS plans;`,
 
@@ -26,22 +30,24 @@ export default class DatabaseInit{
         title VARCHAR(255) NOT NULL,
         priority VARCHAR(255),
         note TEXT,
-        limit_date DATE,
-      );`
+        limit_date DATE
+    );`,
     ];
 
     db.transaction(
-      (tx:any)=>{
-        for (var i = 0; i< sql.length; i++){
+      (tx: any) => {
+        for (var i = 0; i < sql.length; i++) {
           console.log("Execute SQL: ", sql[i]);
           tx.executeSql(sql[i]);
         }
-      },(error:any)=>{
+      },
+      (error: any) => {
         console.log("error call back : " + JSON.stringify(error));
-          console.log(error);
-      }, ()=>{
-        console.log("transaction complete call back")
+        console.log(error);
+      },
+      () => {
+        console.log("transaction complete call back");
       }
-    )
+    );
   }
 }
