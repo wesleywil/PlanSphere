@@ -1,4 +1,4 @@
-export interface Plans{
+export interface Plan{
     id?:number,
     title:string,
     priority?:string,
