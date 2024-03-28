@@ -34,9 +34,21 @@ const PlansList = ({ navigation }: any) => {
       >
         {plans.length ? (
           plans.map((plan) => (
-            <Text key={plan.id} style={styles.planItem}>
-              {plan.title}
-            </Text>
+            <View>
+              <TouchableHighlight
+                onPress={() =>
+                  navigation.navigate("Update Plan", { id: plan.id! })
+                }
+              >
+                <Text>Update</Text>
+              </TouchableHighlight>
+              <Text key={plan.id} style={styles.planItem}>
+                {plan.title}
+              </Text>
+              <TouchableHighlight>
+                <Text>Delete</Text>
+              </TouchableHighlight>
+            </View>
           ))
         ) : (
           <Text style={styles.plansEmpty}>NO PLANS YET</Text>
