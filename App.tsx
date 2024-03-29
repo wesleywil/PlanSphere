@@ -7,6 +7,7 @@ import HomeScreen from "./screens/homeScreen/homeScreen";
 import PlansList from "./screens/plansList/plansList";
 import AddPlan from "./screens/addPlan";
 import UpdatePlan from "./screens/updatePlan/updatePlan";
+import DeletePlan from "./screens/deletePlan/deletePlan";
 
 // Database
 import DatabaseInit from "./database/db-service";
@@ -25,6 +26,7 @@ export default function App() {
         <Stack.Screen name="Plans List" component={PlansList} />
         <Stack.Screen name="Add Plan" component={AddPlan} />
         <Stack.Screen name="Update Plan" component={UpdatePlan} />
+        <Stack.Screen name="Delete Plan" component={DeletePlan} />
       </Stack.Navigator>
     </NavigationContainer>
   );
