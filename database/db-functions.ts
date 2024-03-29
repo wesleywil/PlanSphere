@@ -53,23 +53,30 @@ export const getPlans = (): Promise<unknown> => {
   );
 };
 
-export const getPlanById = (id: number): Promise<Plan> => {
+export const getPlanById = (id: number): Promise<Plan | null> => {
   return new Promise((resolve, reject) =>
     db.transaction(
       (tx) => {
         tx.executeSql(
-          "SELECT * FROM WHERE id = ? ",
+          "SELECT * FROM plans WHERE id = ? LIMIT 1",
           [id],
-          (_: any, { ...plan }: any) => {
-            resolve(plan);
+          (_: any, { rows }: any) => {
+            if(rows.length > 0){
+              resolve(rows.item(0));
+            }else{
+              resolve(null);
+            }
+            
           }
         ),
           (sqlError: any) => {
             console.log(sqlError);
+            reject(sqlError)
           };
       },
       (txError: any) => {
         console.log(txError);
+        reject(txError);
       }
     )
   );
@@ -80,7 +87,7 @@ export const updatePlanById = (plan: Plan): Promise<any> => {
     db.transaction(
       (tx) => {
         tx.executeSql(
-          "UPDATE plan SET title=?, priority=?, note=?, limit_date=? WHERE id=?",
+          "UPDATE plans SET title=?, priority=?, note=?, limit_date=? WHERE id=?",
           [
             plan.title,
             plan.priority ?? null,
