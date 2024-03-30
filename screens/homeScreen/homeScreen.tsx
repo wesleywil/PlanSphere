@@ -11,20 +11,22 @@ const HomeScreen = ({ navigation }: any) => {
     <View style={styles.container}>
       <Image
         style={styles.logoImage}
-        source={{ uri: "https://dummyimage.com/300x300" }}
+        source={require("../../assets/logo.jpg")}
       />
-      <TouchableHighlight
-        style={styles.navTouch}
-        onPress={() => navigation.navigate("Plans List")}
-      >
-        <Text style={styles.navButtonText}>Go to Plans List</Text>
-      </TouchableHighlight>
-      <TouchableHighlight
-        style={styles.navTouch}
-        onPress={() => navigation.navigate("Add Plan")}
-      >
-        <Text style={styles.navButtonText}>Add Plan</Text>
-      </TouchableHighlight>
+      <View style={styles.optionContainer}>
+        <TouchableHighlight
+          style={styles.navTouch}
+          onPress={() => navigation.navigate("Plans List")}
+        >
+          <Text style={styles.navButtonText}>PLANS</Text>
+        </TouchableHighlight>
+        <TouchableHighlight
+          style={styles.navTouch}
+          onPress={() => navigation.navigate("Add Plan")}
+        >
+          <Text style={styles.navButtonText}>ADD PLAN</Text>
+        </TouchableHighlight>
+      </View>
     </View>
   );
 };
@@ -39,19 +41,25 @@ const styles = StyleSheet.create({
     backgroundColor: "#28336b",
   },
   logoImage: {
-    width: 200,
-    height: 200,
-    borderRadius: 200,
+    width: 300,
+    height: 300,
+  },
+  optionContainer: {
+    width: "90%",
+    maxHeight: 180,
+    flex: 1,
+    justifyContent: "center",
+    gap: 30,
   },
   navTouch: {
-    marginTop: 20,
+    backgroundColor: "#1dbae3",
+    borderRadius: 5,
   },
   navButtonText: {
     padding: 10,
     color: "#f9f7f9",
-    backgroundColor: "#1dbae3",
+    textAlign: "center",
     fontWeight: "bold",
-    fontSize: 15,
-    borderRadius: 5,
+    fontSize: 20,
   },
 });
