@@ -5,7 +5,7 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 // Screens
 import HomeScreen from "./screens/homeScreen/homeScreen";
 import PlansList from "./screens/plansList/plansList";
-import AddPlan from "./screens/addPlan";
+import AddPlan from "./screens/appPlan/addPlan";
 import UpdatePlan from "./screens/updatePlan/updatePlan";
 import DeletePlan from "./screens/deletePlan/deletePlan";
 

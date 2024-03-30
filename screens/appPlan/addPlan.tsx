@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Button, TextInput, View, StyleSheet } from "react-native";
-import { createPlan } from "../database/db-functions";
-import { Plan } from "../utils/models";
+import { createPlan } from "../../database/db-functions";
+import { Plan } from "../../utils/models";
 
 const stringToDate = (dateString: string | null): Date | undefined => {
   if (typeof dateString === "string") {
@@ -60,6 +60,8 @@ const AddPlan = ({ navigation }: any) => {
         style={styles.input}
         value={plan.note}
         placeholder="Extra Note"
+        multiline
+        numberOfLines={4}
         onChangeText={handleNoteChange}
       />
       {/* <TextInput
