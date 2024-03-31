@@ -1,7 +1,11 @@
 import { useState } from "react";
 import { Button, TextInput, View, StyleSheet } from "react-native";
+import { Picker } from "@react-native-picker/picker";
+
+// Database functions
 import { createPlan } from "../../database/db-functions";
-import { Plan } from "../../utils/models";
+// Models / Interfaces
+import { Plan, Priority } from "../../utils/models";
 
 const stringToDate = (dateString: string | null): Date | undefined => {
   if (typeof dateString === "string") {
@@ -14,13 +18,15 @@ const stringToDate = (dateString: string | null): Date | undefined => {
 
 const AddPlan = ({ navigation }: any) => {
   const [plan, setPlan] = useState<Plan>({} as Plan);
+  const [selectedPriority, setSelectedPrioritiy] = useState<Priority>();
 
   const handleTitleChange = (text: string) => {
     setPlan({ ...plan, title: text });
   };
 
-  const handlePriorityChange = (text: string) => {
-    setPlan({ ...plan, priority: text });
+  const handlePriorityChange = (priority: Priority) => {
+    setPlan({ ...plan, priority: priority });
+    setSelectedPrioritiy(priority);
   };
 
   const handleNoteChange = (text: string) => {
@@ -50,12 +56,29 @@ const AddPlan = ({ navigation }: any) => {
         placeholder="Plan Title"
         onChangeText={handleTitleChange}
       />
-      <TextInput
+      <Picker
+        selectedValue={selectedPriority}
+        onValueChange={(itemValue, itemIndex) =>
+          handlePriorityChange(itemValue)
+        }
         style={styles.input}
-        value={plan.priority}
-        placeholder="Plan Priority"
-        onChangeText={handlePriorityChange}
-      />
+      >
+        <Picker.Item
+          label={Priority.High}
+          value={Priority.High}
+          style={styles.selectItem}
+        />
+        <Picker.Item
+          label={Priority.Mid}
+          value={Priority.Mid}
+          style={styles.selectItem}
+        />
+        <Picker.Item
+          label={Priority.Low}
+          value={Priority.Low}
+          style={styles.selectItem}
+        />
+      </Picker>
       <TextInput
         style={styles.input}
         value={plan.note}
@@ -94,5 +117,9 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: "#f9f7f9",
     borderRadius: 5,
+  },
+
+  selectItem: {
+    fontSize: 25,
   },
 });

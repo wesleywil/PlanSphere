@@ -1,3 +1,4 @@
+import { Picker } from "@react-native-picker/picker";
 import { useEffect, useState } from "react";
 import {
   StyleSheet,
@@ -8,12 +9,16 @@ import {
   TextInput,
   Button,
 } from "react-native";
+
+// Database functions
 import { getPlanById, updatePlanById } from "../../database/db-functions";
-import { Plan } from "../../utils/models";
+// Models/Interface
+import { Plan, Priority } from "../../utils/models";
 
 const UpdatePlan = ({ route, navigation }: any) => {
   const [plan, setPlan] = useState<Plan>({} as Plan);
   const [loading, setLoading] = useState(true);
+  const [selectedPriority, setSelectedPriority] = useState<Priority>();
   const { id } = route.params;
 
   const selectPlan = async () => {
@@ -28,8 +33,9 @@ const UpdatePlan = ({ route, navigation }: any) => {
     setPlan({ ...plan, title: text });
   };
 
-  const handlePriorityChange = (text: string) => {
-    setPlan({ ...plan, priority: text });
+  const handlePriorityChange = (priority: Priority) => {
+    setPlan({ ...plan, priority: priority });
+    setSelectedPriority(priority);
   };
 
   const handleNoteChange = (text: string) => {
@@ -40,6 +46,7 @@ const UpdatePlan = ({ route, navigation }: any) => {
     try {
       const result = await updatePlanById(plan);
       console.log("Updating plan result ==> ", result);
+      navigation.navigate("Plans List");
     } catch (error) {
       console.error("Error while trying to update a plan: ", error);
     }
@@ -58,12 +65,34 @@ const UpdatePlan = ({ route, navigation }: any) => {
         placeholder="Plan Title"
         onChangeText={handleTitleChange}
       />
-      <TextInput
-        value={plan.priority}
+      <Picker
+        selectedValue={selectedPriority}
+        onValueChange={(itemValue, itemIndex) =>
+          handlePriorityChange(itemValue)
+        }
         style={styles.input}
-        placeholder="Plan Priority"
-        onChangeText={handlePriorityChange}
-      />
+      >
+        <Picker.Item
+          label={Priority.No_Priority}
+          value={Priority.No_Priority}
+          style={styles.selectItem}
+        />
+        <Picker.Item
+          label={Priority.High}
+          value={Priority.High}
+          style={styles.selectItem}
+        />
+        <Picker.Item
+          label={Priority.Mid}
+          value={Priority.Mid}
+          style={styles.selectItem}
+        />
+        <Picker.Item
+          label={Priority.Low}
+          value={Priority.Low}
+          style={styles.selectItem}
+        />
+      </Picker>
       <TextInput
         value={plan.note}
         style={styles.input}
@@ -99,5 +128,8 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: "#f9f7f9",
     borderRadius: 5,
+  },
+  selectItem: {
+    fontSize: 25,
   },
 });
